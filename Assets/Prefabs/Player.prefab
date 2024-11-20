@@ -1816,6 +1816,8 @@ GameObject:
   m_Component:
   - component: {fileID: 237572444925577315}
   - component: {fileID: 8576470980005874416}
+  - component: {fileID: 3059082247210881325}
+  - component: {fileID: 1195074401770397653}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1859,7 +1861,7 @@ Animator:
   m_Controller: {fileID: 9100000, guid: 1b6220865191a8846b29b7a7a8d68787, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
-  m_ApplyRootMotion: 1
+  m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_WarningMessage: 
@@ -1867,6 +1869,51 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!143 &3059082247210881325
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8388215381012504397}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Height: 0.9
+  m_Radius: 0.2
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 0.45, z: 0}
+--- !u!114 &1195074401770397653
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8388215381012504397}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc7b78ce05b63b94e924c4dd42303810, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Side: 1
+  SwipeLeft: 0
+  SwipeRight: 0
+  XValue: 2
+  AnimLeft: dodgeLeft
+  AnimRight: dodgeRight
+  SpeedDodge: 10
 --- !u!1 &8545823642676722364
 GameObject:
   m_ObjectHideFlags: 0

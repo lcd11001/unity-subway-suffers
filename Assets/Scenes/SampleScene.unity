@@ -159,7 +159,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -209,7 +209,7 @@ Transform:
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalPosition: {x: 0, y: 1, z: -5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -500,6 +500,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1195074401770397653, guid: 00f919e252dbdda4ea687ce57a2d5bac,
+        type: 3}
+      propertyPath: SpeedDodge
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 8388215381012504397, guid: 00f919e252dbdda4ea687ce57a2d5bac,
         type: 3}
       propertyPath: m_Name
@@ -540,6 +545,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5445702179418765112}
     m_Modifications:
+    - target: {fileID: 1072482305134002801, guid: 990b0f234e844954c9cf1fce0c5453be,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1374971937576806574, guid: 990b0f234e844954c9cf1fce0c5453be,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -590,10 +600,20 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2770878003530528196, guid: 990b0f234e844954c9cf1fce0c5453be,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3446179706913032724, guid: 990b0f234e844954c9cf1fce0c5453be,
         type: 3}
       propertyPath: m_Name
       value: Intro
+      objectReference: {fileID: 0}
+    - target: {fileID: 6945293401591282912, guid: 990b0f234e844954c9cf1fce0c5453be,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
