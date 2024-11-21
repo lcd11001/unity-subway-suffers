@@ -1907,13 +1907,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc7b78ce05b63b94e924c4dd42303810, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Side: 1
-  SwipeLeft: 0
-  SwipeRight: 0
   XValue: 2
+  SpeedDodge: 10
+  JumpPower: 7
+  RollDuration: 0.5
   AnimLeft: dodgeLeft
   AnimRight: dodgeRight
-  SpeedDodge: 10
+  AnimJump: jump
+  AnimFalling: falling
+  AnimLanding: landing
+  AnimRoll: roll
 --- !u!1 &8545823642676722364
 GameObject:
   m_ObjectHideFlags: 0

@@ -13,6 +13,7 @@ public class Character : MonoBehaviour
     public float XValue = 2.0f;
     public float SpeedDodge = 10.0f;
     public float JumpPower = 7f;
+    public float RollDuration = 0.5f;
 
     [Space(10)]
     [Header("Animation Config")]
@@ -21,6 +22,7 @@ public class Character : MonoBehaviour
     public string AnimJump = "jump";
     public string AnimFalling = "falling";
     public string AnimLanding = "landing";
+    public string AnimRoll = "roll";
 
     SIDE Side = SIDE.Mid;
     bool SwipeLeft = false;
@@ -33,7 +35,11 @@ public class Character : MonoBehaviour
     float x = 0.0f;
     float y = 0.0f;
     bool isJumping = false;
-    bool isScrolling = false;
+    bool isRolling = false;
+    float rollTimer = 0.0f;
+
+    float colliderHeight = 0.0f;
+    float colliderCenterY = 0.0f;
 
     CharacterController m_controller;
     Animator m_animator;
@@ -41,6 +47,9 @@ public class Character : MonoBehaviour
     void Start()
     {
         m_controller = GetComponent<CharacterController>();
+        colliderHeight = m_controller.height;
+        colliderCenterY = m_controller.center.y;
+
         m_animator = GetComponent<Animator>();
 
         transform.position = Vector3.zero;
@@ -56,6 +65,7 @@ public class Character : MonoBehaviour
 
         Swipe();
         Jump();
+        Roll();
 
         Vector3 moveVector = new Vector3(x - transform.position.x, y, 0);
         m_controller.Move(moveVector);
@@ -126,5 +136,38 @@ public class Character : MonoBehaviour
         }
 
         y = newYPos * Time.deltaTime;
+    }
+
+    private void Roll()
+    {
+        if (isRolling)
+        {
+            rollTimer -= Time.deltaTime;
+
+            if (rollTimer <= 0)
+            {
+                rollTimer = 0;
+                isRolling = false;
+
+                // reset collider to original size
+                m_controller.height = colliderHeight;
+                m_controller.center = new Vector3(m_controller.center.x, colliderCenterY, m_controller.center.z);
+            }
+        }
+        else if (SwipeDown)
+        {
+            if (m_controller.isGrounded)
+            {
+                //y -= 10f;
+                rollTimer = RollDuration;
+                m_animator.CrossFadeInFixedTime(AnimRoll, 0.1f);
+                isRolling = true;
+                isJumping = false;
+
+                // reduce collider size
+                m_controller.height = colliderHeight / 2;
+                m_controller.center = new Vector3(m_controller.center.x, colliderCenterY / 2, m_controller.center.z);
+            }
+        }
     }
 }
