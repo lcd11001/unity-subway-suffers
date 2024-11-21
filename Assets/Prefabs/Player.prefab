@@ -1990,7 +1990,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc7b78ce05b63b94e924c4dd42303810, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ForwardSpeed: 0
+  ForwardSpeed: 5
   SwipeValue: 2
   SpeedDodge: 10
   JumpPower: 7
