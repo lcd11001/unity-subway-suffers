@@ -10,7 +10,8 @@ public enum SIDE { Left, Mid, Right }
 [RequireComponent(typeof(Animator))]
 public class Character : MonoBehaviour
 {
-    public float XValue = 2.0f;
+    public float ForwardSpeed = 5.0f;
+    public float SwipeValue = 2.0f;
     public float SpeedDodge = 10.0f;
     public float JumpPower = 7f;
     public float RollDuration = 0.5f;
@@ -67,18 +68,18 @@ public class Character : MonoBehaviour
         Jump();
         Roll();
 
-        Vector3 moveVector = new Vector3(x - transform.position.x, y, 0);
+        Vector3 moveVector = new Vector3(x - transform.position.x, y, ForwardSpeed * Time.deltaTime);
         m_controller.Move(moveVector);
     }
 
     private void Swipe()
     {
-        if (SwipeLeft)
+        if (SwipeLeft && !isRolling)
         {
             if (Side == SIDE.Mid)
             {
                 Side = SIDE.Left;
-                newXPos = -XValue;
+                newXPos = -SwipeValue;
             }
             else if (Side == SIDE.Right)
             {
@@ -87,12 +88,12 @@ public class Character : MonoBehaviour
             }
             m_animator.Play(AnimLeft);
         }
-        else if (SwipeRight)
+        else if (SwipeRight && !isRolling)
         {
             if (Side == SIDE.Mid)
             {
                 Side = SIDE.Right;
-                newXPos = XValue;
+                newXPos = SwipeValue;
             }
             else if (Side == SIDE.Left)
             {
