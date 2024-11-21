@@ -48,6 +48,7 @@ public class Character : MonoBehaviour
     void Start()
     {
         m_controller = GetComponent<CharacterController>();
+        m_controller.detectCollisions = false;
         colliderHeight = m_controller.height;
         colliderCenterY = m_controller.center.y;
 
