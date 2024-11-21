@@ -45,11 +45,47 @@ public class CharacterCollider : MonoBehaviour
         return HIT_X.Mid;
     }
 
+    public HIT_Y GetHitY(Collider col)
+    {
+        Bounds char_bounds = characterController.bounds;
+        Bounds col_bounds = col.bounds;
+
+        float charCenterY = char_bounds.center.y;
+        float colCenterY = col_bounds.center.y;
+
+        float relativeY = charCenterY - colCenterY;
+
+        if (relativeY > col_bounds.extents.y / 3)
+            return HIT_Y.Up;
+        if (relativeY < -col_bounds.extents.y / 3)
+            return HIT_Y.Down;
+        return HIT_Y.Mid;
+    }
+
+    public HIT_Z GetHitZ(Collider col)
+    {
+        Bounds char_bounds = characterController.bounds;
+        Bounds col_bounds = col.bounds;
+
+        float charCenterZ = char_bounds.center.z;
+        float colCenterZ = col_bounds.center.z;
+
+        float relativeZ = charCenterZ - colCenterZ;
+
+        if (relativeZ > col_bounds.extents.z / 3)
+            return HIT_Z.Front;
+        if (relativeZ < -col_bounds.extents.z / 3)
+            return HIT_Z.Back;
+        return HIT_Z.Mid;
+    }
+
     public void OnCharacterColliderHit(Collider col)
     {
         hitX = GetHitX(col);
+        hitY = GetHitY(col);
+        hitZ = GetHitZ(col);
 
-        Debug.Log("OnCharacterColliderHit: " + hitX);
+        Debug.Log("OnCharacterCollider HitX: " + hitX + " HitY: " + hitY + " HitZ: " + hitZ);
     }
 
     public void ResetHit()
