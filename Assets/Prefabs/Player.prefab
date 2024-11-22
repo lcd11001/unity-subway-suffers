@@ -40,7 +40,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8969013271644752377}
-  - component: {fileID: 8474376998193165081}
+  - component: {fileID: 6592823266115433098}
   - component: {fileID: 2062030228572848554}
   - component: {fileID: 8307029137654793659}
   - component: {fileID: 4923398751040917061}
@@ -66,7 +66,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 237572444925577315}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8474376998193165081
+--- !u!114 &6592823266115433098
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -75,13 +75,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 199179899521381963}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6f5acca31087c2e47ae07a51e02178fd, type: 3}
+  m_Script: {fileID: 11500000, guid: 71f8926cfd5e9634d82ace5e669854c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterController: {fileID: 3059082247210881325}
-  hitX: 3
-  hitY: 3
-  hitZ: 3
+  currentHitPosition:
+    hitX: 0
+    hitY: 0
+    hitZ: 0
 --- !u!114 &2062030228572848554
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -94,7 +94,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0b831ab678b27143a0485a813634264, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterCollider: {fileID: 8474376998193165081}
+  character: {fileID: 1195074401770397653}
+  detector: {fileID: 6592823266115433098}
+  ignoreTags:
+  - Player
+  - Ground
 --- !u!136 &8307029137654793659
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -117,7 +121,7 @@ CapsuleCollider:
   m_Radius: 0.2
   m_Height: 0.9
   m_Direction: 1
-  m_Center: {x: 0, y: 0.45, z: 0}
+  m_Center: {x: 0, y: 0.45, z: 0.2}
 --- !u!54 &4923398751040917061
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1990,7 +1994,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc7b78ce05b63b94e924c4dd42303810, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ForwardSpeed: 5
+  ForwardSpeed: 0
   SwipeValue: 2
   SpeedDodge: 10
   JumpPower: 7
@@ -2001,6 +2005,14 @@ MonoBehaviour:
   AnimFalling: falling
   AnimLanding: landing
   AnimRoll: roll
+  AnimDeathLow: death_lower
+  AnimDeathUp: death_upper
+  AnimDeathBounce: death_bounce
+  AnimDeathTrain: death_movingTrain
+  AnimStumbleSideRight: stumbleSideRight
+  AnimStumbleSideLeft: stumbleSideLeft
+  AnimStumbleCornerRight: stumbleCornerRight
+  AnimStumbleCornerLeft: stumbleCornerLeft
 --- !u!1 &8545823642676722364
 GameObject:
   m_ObjectHideFlags: 0

@@ -584,7 +584,7 @@ GameObject:
   - component: {fileID: 1608456292}
   m_Layer: 0
   m_Name: Ground Collider
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -749,11 +749,6 @@ PrefabInstance:
     - target: {fileID: 237572444925577315, guid: 00f919e252dbdda4ea687ce57a2d5bac,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1195074401770397653, guid: 00f919e252dbdda4ea687ce57a2d5bac,
-        type: 3}
-      propertyPath: ForwardSpeed
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8388215381012504397, guid: 00f919e252dbdda4ea687ce57a2d5bac,

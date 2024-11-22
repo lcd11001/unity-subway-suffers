@@ -25,6 +25,17 @@ public class Character : MonoBehaviour
     public string AnimLanding = "landing";
     public string AnimRoll = "roll";
 
+    public string AnimDeathLow = "death_lower";
+    public string AnimDeathUp = "death_upper";
+    public string AnimDeathBounce = "death_bounce";
+    public string AnimDeathTrain = "death_movingTrain";
+
+    public string AnimStumbleSideRight = "stumbleSideRight";
+    public string AnimStumbleSideLeft = "stumbleSideLeft";
+    public string AnimStumbleCornerRight = "stumbleCornerRight";
+    public string AnimStumbleCornerLeft = "stumbleCornerLeft";
+
+
     SIDE Side = SIDE.Mid;
     bool SwipeLeft = false;
     bool SwipeRight = false;
@@ -169,6 +180,29 @@ public class Character : MonoBehaviour
                 // reduce collider size
                 m_controller.height = colliderHeight / 2;
                 m_controller.center = new Vector3(m_controller.center.x, colliderCenterY / 2, m_controller.center.z);
+            }
+        }
+    }
+
+    public void OnDeath(HIT_X hitX, HIT_Y hitY, HIT_Z hitZ)
+    {
+        if (hitZ == HIT_Z.Front && hitX == HIT_X.Mid)
+        {
+            if (hitY == HIT_Y.Up)
+            {
+                Debug.Log("Death Up");
+            }
+            else if (hitY == HIT_Y.Mid)
+            {
+                Debug.Log("Death Mid");
+            }
+            else if (hitY == HIT_Y.Down)
+            {
+                Debug.Log("Death Down");
+            }
+            else if (hitY == HIT_Y.Low)
+            {
+                Debug.Log("Death Low");
             }
         }
     }

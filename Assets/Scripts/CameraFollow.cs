@@ -36,7 +36,7 @@ public class CameraFollow : MonoBehaviour
         // Check if the player is grounded
         if (IsGrounded())
         {
-            Debug.Log("Grounded");
+            //Debug.Log("Grounded");
             Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed);
             transform.position = smoothedPosition;
             transform.LookAt(target.position + lookAtOffset);
@@ -46,7 +46,7 @@ public class CameraFollow : MonoBehaviour
         }
         else
         {
-            Debug.Log("Not Grounded");
+            //Debug.Log("Not Grounded");
             // Keep the last grounded position and rotation
             transform.position = new Vector3(desiredPosition.x, lastFollowY, desiredPosition.z);
         }
