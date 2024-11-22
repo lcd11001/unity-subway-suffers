@@ -191,30 +191,57 @@ public class Character : MonoBehaviour
         {
             if (hitY == HIT_Y.Up && !isRolling)
             {
-                Debug.Log("Death Up");
-                m_animator.Play(AnimDeathUp);
+                Debug.Log("Dead: " + AnimDeathLow);
+                m_animator.Play(AnimDeathLow);
             }
             else if (hitY == HIT_Y.Mid)
             {
-                Debug.Log("Death Mid");
                 if (tag == "MovingTrain")
                 {
+                    Debug.Log("Dead: " + AnimDeathTrain);
                     m_animator.Play(AnimDeathTrain);
                 }
                 else if (tag != "Ramp")
                 {
-                    m_animator.Play(AnimDeathBounce);
+                    Debug.Log("Dead: " + AnimDeathDown);
+                    m_animator.Play(AnimDeathDown);
                 }
             }
             else if (hitY == HIT_Y.Down)
             {
-                Debug.Log("Death Down");
-                m_animator.Play(AnimDeathDown);
+                Debug.Log("Death: " + AnimDeathBounce);
+                m_animator.Play(AnimDeathBounce);
             }
             else if (hitY == HIT_Y.Low)
             {
-                Debug.Log("Death Low");
-                m_animator.Play(AnimDeathLow);
+                Debug.Log("Death: " + AnimDeathUp);
+                m_animator.Play(AnimDeathUp);
+            }
+        }
+        else if (hitZ == HIT_Z.Mid)
+        {
+            if (hitX == HIT_X.Right)
+            {
+                Debug.Log("Death: " + AnimStumbleSideLeft);
+                m_animator.Play(AnimStumbleSideLeft);
+            }
+            else if (hitX == HIT_X.Left)
+            {
+                Debug.Log("Death: " + AnimStumbleSideRight);
+                m_animator.Play(AnimStumbleSideRight);
+            }
+        }
+        else
+        {
+            if (hitX == HIT_X.Right)
+            {
+                Debug.Log("Death: " + AnimStumbleCornerLeft);
+                m_animator.Play(AnimStumbleCornerLeft);
+            }
+            else if (hitX == HIT_X.Left)
+            {
+                Debug.Log("Death: " + AnimStumbleCornerRight);
+                m_animator.Play(AnimStumbleCornerRight);
             }
         }
     }

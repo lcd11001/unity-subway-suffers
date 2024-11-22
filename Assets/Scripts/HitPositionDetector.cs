@@ -95,9 +95,9 @@ public class HitPositionDetector : MonoBehaviour
 
     private HIT_Y GetYPosition(float ratio)
     {
-        const float lowThreshold = 0.25f;
-        const float downThreshold = 0.45f;
-        const float midThreshold = 0.65f;
+        const float lowThreshold = 0.15f;
+        const float downThreshold = 0.5f;
+        const float midThreshold = 0.85f;
 
         if (ratio < lowThreshold) return HIT_Y.Low;
         if (ratio < downThreshold) return HIT_Y.Down;

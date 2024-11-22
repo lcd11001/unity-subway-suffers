@@ -118,7 +118,7 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.4
+  m_Radius: 0.2
   m_Height: 0.9
   m_Direction: 1
   m_Center: {x: 0, y: 0.45, z: 0}
@@ -2006,7 +2006,7 @@ MonoBehaviour:
   AnimLanding: landing
   AnimRoll: roll
   AnimDeathDown: death_lower
-  AnimDeathLow: death_lower
+  AnimDeathStumble: stumble_low
   AnimDeathUp: death_upper
   AnimDeathBounce: death_bounce
   AnimDeathTrain: death_movingTrain
