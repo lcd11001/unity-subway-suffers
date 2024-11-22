@@ -33,14 +33,34 @@ public class HitPositionDetector : MonoBehaviour
 
         try
         {
-            // Convert hit point to local space of the cube
-            Vector3 localHitPoint = hitObject.transform.InverseTransformPoint(hitPoint);
-            Bounds bounds = hitObject.bounds;
+            // Get the object's transform
+            Transform objectTransform = hitObject.transform;
 
-            // Calculate relative positions (0 to 1) with safety checks
-            float xRatio = Mathf.Clamp01(Mathf.InverseLerp(bounds.min.x, bounds.max.x, hitPoint.x));
-            float yRatio = Mathf.Clamp01(Mathf.InverseLerp(bounds.min.y, bounds.max.y, hitPoint.y));
-            float zRatio = Mathf.Clamp01(Mathf.InverseLerp(bounds.min.z, bounds.max.z, hitPoint.z));
+            // Convert world hit point to local space
+            Vector3 localHitPoint = objectTransform.InverseTransformPoint(hitPoint);
+
+            // Get the object's local bounds
+            Bounds localBounds = hitObject.bounds;
+            Vector3 localCenter = objectTransform.InverseTransformPoint(localBounds.center);
+            Vector3 localSize = localBounds.size;
+
+            // Calculate local space boundaries
+            Vector3 localMin = localCenter - localSize * 0.5f;
+            Vector3 localMax = localCenter + localSize * 0.5f;
+
+            // Calculate ratios in local space
+            float xRatio = Mathf.InverseLerp(localMin.x, localMax.x, localHitPoint.x);
+            float yRatio = Mathf.InverseLerp(localMin.y, localMax.y, localHitPoint.y);
+            float zRatio = Mathf.InverseLerp(localMin.z, localMax.z, localHitPoint.z);
+
+            // The Z-axis (forward) needs to be inverted because Unity's forward is positive Z
+            // but we want "Front" to be the facing direction
+            zRatio = 1f - zRatio;
+
+            // Clamp ratios to handle edge cases
+            xRatio = Mathf.Clamp01(xRatio);
+            yRatio = Mathf.Clamp01(yRatio);
+            zRatio = Mathf.Clamp01(zRatio);
 
             hitData = new HitPositionData
             {
@@ -50,7 +70,7 @@ public class HitPositionDetector : MonoBehaviour
             };
 
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-            Debug.Log($"Hit Position: {hitData}");
+            Debug.Log($"Hit Position: {hitData} (Local Point: {localHitPoint}, Ratios: X={xRatio:F2}, Y={yRatio:F2}, Z={zRatio:F2})");
             DrawDebugVisualization(hitObject, hitPoint);
 #endif
 
@@ -98,9 +118,17 @@ public class HitPositionDetector : MonoBehaviour
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
     private void DrawDebugVisualization(Collider hitObject, Vector3 hitPoint)
     {
-        // Draw hit point
-        Debug.DrawLine(hitPoint - Vector3.one * 0.1f, hitPoint + Vector3.one * 0.1f, Color.red, 2f);
-        Debug.DrawLine(hitPoint - new Vector3(-0.1f, 0.1f, 0.1f), hitPoint + new Vector3(-0.1f, 0.1f, 0.1f), Color.red, 2f);
+        // Draw hit point in world space
+        Debug.DrawLine(hitPoint - Vector3.one * 0.1f, hitPoint + Vector3.one * 0.1f, Color.yellow, 2f);
+        Debug.DrawLine(hitPoint - new Vector3(-0.1f, 0.1f, 0.1f), hitPoint + new Vector3(-0.1f, 0.1f, 0.1f), Color.yellow, 2f);
+
+        // Draw object's forward direction
+        Debug.DrawRay(hitObject.bounds.center, hitObject.transform.forward * 2f, Color.blue, 2f);
+
+        // Draw local axes at hit point
+        Debug.DrawRay(hitPoint, hitObject.transform.right * 0.5f, Color.red, 2f);
+        Debug.DrawRay(hitPoint, hitObject.transform.up * 0.5f, Color.green, 2f);
+        Debug.DrawRay(hitPoint, hitObject.transform.forward * 0.5f, Color.blue, 2f);
     }
 #endif
 }

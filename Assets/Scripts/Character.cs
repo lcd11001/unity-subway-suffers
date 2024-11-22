@@ -25,7 +25,8 @@ public class Character : MonoBehaviour
     public string AnimLanding = "landing";
     public string AnimRoll = "roll";
 
-    public string AnimDeathLow = "death_lower";
+    public string AnimDeathDown = "death_lower";
+    public string AnimDeathLow = "stumble_low";
     public string AnimDeathUp = "death_upper";
     public string AnimDeathBounce = "death_bounce";
     public string AnimDeathTrain = "death_movingTrain";
@@ -184,25 +185,36 @@ public class Character : MonoBehaviour
         }
     }
 
-    public void OnDeath(HIT_X hitX, HIT_Y hitY, HIT_Z hitZ)
+    public void OnDeath(HIT_X hitX, HIT_Y hitY, HIT_Z hitZ, string tag)
     {
         if (hitZ == HIT_Z.Front && hitX == HIT_X.Mid)
         {
-            if (hitY == HIT_Y.Up)
+            if (hitY == HIT_Y.Up && !isRolling)
             {
                 Debug.Log("Death Up");
+                m_animator.Play(AnimDeathUp);
             }
             else if (hitY == HIT_Y.Mid)
             {
                 Debug.Log("Death Mid");
+                if (tag == "MovingTrain")
+                {
+                    m_animator.Play(AnimDeathTrain);
+                }
+                else if (tag != "Ramp")
+                {
+                    m_animator.Play(AnimDeathBounce);
+                }
             }
             else if (hitY == HIT_Y.Down)
             {
                 Debug.Log("Death Down");
+                m_animator.Play(AnimDeathDown);
             }
             else if (hitY == HIT_Y.Low)
             {
                 Debug.Log("Death Low");
+                m_animator.Play(AnimDeathLow);
             }
         }
     }

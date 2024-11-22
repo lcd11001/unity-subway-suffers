@@ -78,7 +78,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71f8926cfd5e9634d82ace5e669854c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentHitPosition:
+  hitData:
     hitX: 0
     hitY: 0
     hitZ: 0
@@ -118,10 +118,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.2
+  m_Radius: 0.4
   m_Height: 0.9
   m_Direction: 1
-  m_Center: {x: 0, y: 0.45, z: 0.2}
+  m_Center: {x: 0, y: 0.45, z: 0}
 --- !u!54 &4923398751040917061
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2005,6 +2005,7 @@ MonoBehaviour:
   AnimFalling: falling
   AnimLanding: landing
   AnimRoll: roll
+  AnimDeathDown: death_lower
   AnimDeathLow: death_lower
   AnimDeathUp: death_upper
   AnimDeathBounce: death_bounce
