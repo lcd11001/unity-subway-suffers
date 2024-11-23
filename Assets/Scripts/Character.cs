@@ -101,6 +101,7 @@ public class Character : MonoBehaviour
 
         if (m_animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1)
         {
+            DisableStumbleLayer();
             stopAllState = false;
         }
         stumbleTimer = Mathf.MoveTowards(stumbleTimer, StumbleTolerance, Time.deltaTime);
@@ -278,11 +279,13 @@ public class Character : MonoBehaviour
         {
             if (hitX == HIT_X.Right)
             {
+                EnableStumbleLayer();
                 PlayStumbleAnim(AnimStumbleCornerLeft);
                 return true;
             }
             else if (hitX == HIT_X.Left)
             {
+                EnableStumbleLayer();
                 PlayStumbleAnim(AnimStumbleCornerRight);
                 return true;
             }
@@ -305,6 +308,8 @@ public class Character : MonoBehaviour
     private IEnumerator PlayDeathAnim(string anim)
     {
         Debug.Log("Death: " + anim);
+        DisableStumbleLayer();
+
         stopAllState = true;
         m_animator.Play(anim);
         yield return new WaitForSeconds(0.2f);
@@ -330,5 +335,15 @@ public class Character : MonoBehaviour
         }
 
         stumbleTimer -= 0.6f * StumbleTolerance;
+    }
+
+    private void EnableStumbleLayer(float weight = 1.0f)
+    {
+        m_animator.SetLayerWeight(1, weight);
+    }
+
+    private void DisableStumbleLayer()
+    {
+        m_animator.SetLayerWeight(1, 0);
     }
 }
