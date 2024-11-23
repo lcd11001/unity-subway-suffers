@@ -23,7 +23,10 @@ public class OnCollision : MonoBehaviour
         ContactPoint contact = collision.GetContact(0);
         var hitPosition = detector.GetHitPosition(collision.collider, contact.point);
 
-        character.OnDeath(hitPosition.hitX, hitPosition.hitY, hitPosition.hitZ, collision.collider.tag);
+        if (character.OnDeath(hitPosition.hitX, hitPosition.hitY, hitPosition.hitZ, collision.collider.tag))
+        {
+            detector.ResetCollision();
+        }
     }
 
 }

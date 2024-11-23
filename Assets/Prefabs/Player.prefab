@@ -1976,7 +1976,7 @@ CharacterController:
   m_Enabled: 1
   serializedVersion: 3
   m_Height: 0.9
-  m_Radius: 0.2
+  m_Radius: 0.1
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
@@ -1995,10 +1995,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ForwardSpeed: 0
-  SwipeValue: 2
   SpeedDodge: 10
   JumpPower: 7
   RollDuration: 0.5
+  StumbleTolerance: 10
+  CharacterCollider: {fileID: 8307029137654793659}
+  Side: 0
+  LastSide: 0
+  canInput: 1
   AnimLeft: dodgeLeft
   AnimRight: dodgeRight
   AnimJump: jump
@@ -2006,7 +2010,6 @@ MonoBehaviour:
   AnimLanding: landing
   AnimRoll: roll
   AnimDeathDown: death_lower
-  AnimDeathStumble: stumble_low
   AnimDeathUp: death_upper
   AnimDeathBounce: death_bounce
   AnimDeathTrain: death_movingTrain
@@ -2014,6 +2017,9 @@ MonoBehaviour:
   AnimStumbleSideLeft: stumbleSideLeft
   AnimStumbleCornerRight: stumbleCornerRight
   AnimStumbleCornerLeft: stumbleCornerLeft
+  AnimStumbleLeft: stumbleOffLeft
+  AnimStumbleRight: stumbleOffRight
+  AnimStumbleLow: stumble_low
 --- !u!1 &8545823642676722364
 GameObject:
   m_ObjectHideFlags: 0

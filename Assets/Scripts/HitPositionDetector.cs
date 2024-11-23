@@ -115,6 +115,12 @@ public class HitPositionDetector : MonoBehaviour
         return HIT_Z.Back;
     }
 
+    public HitPositionData ResetCollision()
+    {
+        hitData = new HitPositionData { hitX = HIT_X.None, hitY = HIT_Y.None, hitZ = HIT_Z.None };
+        return hitData;
+    }
+
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
     private void DrawDebugVisualization(Collider hitObject, Vector3 hitPoint)
     {

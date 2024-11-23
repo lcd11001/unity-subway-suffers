@@ -14,9 +14,15 @@ public class Character : MonoBehaviour
     public float SpeedDodge = 10.0f;
     public float JumpPower = 7f;
     public float RollDuration = 0.5f;
+    public float StumbleTolerance = 10f;
+
+    public Collider CharacterCollider;
 
     public SIDE Side = SIDE.Mid;
     public SIDE LastSide = SIDE.Mid;
+
+    [SerializeField]
+    bool canInput = true;
 
     [Space(10)]
     [Header("Animation Config")]
@@ -28,7 +34,6 @@ public class Character : MonoBehaviour
     public string AnimRoll = "roll";
 
     public string AnimDeathDown = "death_lower";
-    public string AnimDeathLow = "stumble_low";
     public string AnimDeathUp = "death_upper";
     public string AnimDeathBounce = "death_bounce";
     public string AnimDeathTrain = "death_movingTrain";
@@ -39,6 +44,7 @@ public class Character : MonoBehaviour
     public string AnimStumbleCornerLeft = "stumbleCornerLeft";
     public string AnimStumbleLeft = "stumbleOffLeft";
     public string AnimStumbleRight = "stumbleOffRight";
+    public string AnimStumbleLow = "stumble_low";
 
 
 
@@ -53,12 +59,17 @@ public class Character : MonoBehaviour
     bool isJumping = false;
     bool isRolling = false;
     float rollTimer = 0.0f;
+    float stumbleTimer = 0.0f;
 
     float colliderHeight = 0.0f;
     float colliderCenterY = 0.0f;
 
     CharacterController m_controller;
     Animator m_animator;
+
+    bool stopAllState = false;
+
+
 
     void Start()
     {
@@ -70,15 +81,29 @@ public class Character : MonoBehaviour
         m_animator = GetComponent<Animator>();
 
         transform.position = Vector3.zero;
+        stumbleTimer = StumbleTolerance;
     }
 
 
     void Update()
     {
-        SwipeLeft = Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A);
-        SwipeRight = Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D);
-        SwipeUp = Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W);
-        SwipeDown = Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S);
+        CharacterCollider.isTrigger = !canInput;
+        if (!canInput)
+        {
+            m_controller.Move(Vector3.down * 10f * Time.deltaTime);
+            return;
+        }
+
+        SwipeLeft = (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A)) && canInput;
+        SwipeRight = (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D)) && canInput;
+        SwipeUp = (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W)) && canInput;
+        SwipeDown = (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S)) && canInput;
+
+        if (m_animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1)
+        {
+            stopAllState = false;
+        }
+        stumbleTimer = Mathf.MoveTowards(stumbleTimer, StumbleTolerance, Time.deltaTime);
 
         Swipe();
         Jump();
@@ -96,18 +121,18 @@ public class Character : MonoBehaviour
             {
                 LastSide = Side;
                 Side = SIDE.Left;
-                m_animator.Play(AnimLeft);
+                PlayAnim(AnimLeft);
             }
             else if (Side == SIDE.Right)
             {
                 LastSide = Side;
                 Side = SIDE.Mid;
-                m_animator.Play(AnimLeft);
+                PlayAnim(AnimLeft);
             }
-            else
+            else if (Side != LastSide)
             {
                 LastSide = Side;
-                m_animator.Play(AnimStumbleLeft);
+                PlayAnim(AnimStumbleLeft);
             }
 
         }
@@ -117,18 +142,18 @@ public class Character : MonoBehaviour
             {
                 LastSide = Side;
                 Side = SIDE.Right;
-                m_animator.Play(AnimRight);
+                PlayAnim(AnimRight);
             }
             else if (Side == SIDE.Left)
             {
                 LastSide = Side;
                 Side = SIDE.Mid;
-                m_animator.Play(AnimRight);
+                PlayAnim(AnimRight);
             }
-            else
+            else if (Side != LastSide)
             {
                 LastSide = Side;
-                m_animator.Play(AnimStumbleRight);
+                PlayAnim(AnimStumbleRight);
             }
         }
 
@@ -145,7 +170,7 @@ public class Character : MonoBehaviour
         {
             if (m_animator.GetCurrentAnimatorStateInfo(0).IsName(AnimFalling))
             {
-                m_animator.Play(AnimLanding);
+                PlayAnim(AnimLanding);
                 isJumping = false;
                 y = 0.0f;
             }
@@ -161,7 +186,7 @@ public class Character : MonoBehaviour
             y -= JumpPower * 2 * Time.deltaTime;
             if (m_controller.velocity.y < -0.1f)
             {
-                m_animator.Play(AnimFalling);
+                PlayAnim(AnimFalling);
             }
         }
     }
@@ -199,37 +224,37 @@ public class Character : MonoBehaviour
         }
     }
 
-    public void OnDeath(HIT_X hitX, HIT_Y hitY, HIT_Z hitZ, string tag)
+    public bool OnDeath(HIT_X hitX, HIT_Y hitY, HIT_Z hitZ, string tag)
     {
         if (hitZ == HIT_Z.Front && hitX == HIT_X.Mid)
         {
-            if (hitY == HIT_Y.Up && !isRolling)
+            if (hitY == HIT_Y.Up)
             {
-                Debug.Log("Dead: " + AnimDeathLow);
-                m_animator.Play(AnimDeathLow);
+                PlayStumbleAnim(AnimStumbleLow);
+                return true;
             }
             else if (hitY == HIT_Y.Mid)
             {
                 if (tag == "MovingTrain")
                 {
-                    Debug.Log("Dead: " + AnimDeathTrain);
-                    m_animator.Play(AnimDeathTrain);
+                    StartCoroutine(PlayDeathAnim(AnimDeathTrain));
+                    return true;
                 }
                 else if (tag != "Ramp")
                 {
-                    Debug.Log("Dead: " + AnimDeathDown);
-                    m_animator.Play(AnimDeathDown);
+                    StartCoroutine(PlayDeathAnim(AnimDeathDown));
+                    return true;
                 }
             }
             else if (hitY == HIT_Y.Down)
             {
-                Debug.Log("Death: " + AnimDeathBounce);
-                m_animator.Play(AnimDeathBounce);
+                StartCoroutine(PlayDeathAnim(AnimDeathBounce));
+                return true;
             }
-            else if (hitY == HIT_Y.Low)
+            else if (hitY == HIT_Y.Low && !isRolling)
             {
-                Debug.Log("Death: " + AnimDeathUp);
-                m_animator.Play(AnimDeathUp);
+                StartCoroutine(PlayDeathAnim(AnimDeathUp));
+                return true;
             }
         }
         else if (hitZ == HIT_Z.Mid)
@@ -238,29 +263,72 @@ public class Character : MonoBehaviour
             {
                 // swipe back to last side
                 Side = LastSide;
-                Debug.Log("Death: " + AnimStumbleSideLeft);
-                m_animator.Play(AnimStumbleSideLeft);
+                PlayStumbleAnim(AnimStumbleSideLeft);
+                return true;
             }
             else if (hitX == HIT_X.Left)
             {
                 // swipe back to last side
                 Side = LastSide;
-                Debug.Log("Death: " + AnimStumbleSideRight);
-                m_animator.Play(AnimStumbleSideRight);
+                PlayStumbleAnim(AnimStumbleSideRight);
+                return true;
             }
         }
         else
         {
             if (hitX == HIT_X.Right)
             {
-                Debug.Log("Death: " + AnimStumbleCornerLeft);
-                m_animator.Play(AnimStumbleCornerLeft);
+                PlayStumbleAnim(AnimStumbleCornerLeft);
+                return true;
             }
             else if (hitX == HIT_X.Left)
             {
-                Debug.Log("Death: " + AnimStumbleCornerRight);
-                m_animator.Play(AnimStumbleCornerRight);
+                PlayStumbleAnim(AnimStumbleCornerRight);
+                return true;
             }
         }
+
+        return false;
+    }
+
+    private void PlayAnim(string anim)
+    {
+        if (stopAllState)
+        {
+            return;
+        }
+
+        Debug.Log("Play: " + anim);
+        m_animator.Play(anim);
+    }
+
+    private IEnumerator PlayDeathAnim(string anim)
+    {
+        Debug.Log("Death: " + anim);
+        stopAllState = true;
+        m_animator.Play(anim);
+        yield return new WaitForSeconds(0.2f);
+        canInput = false;
+    }
+
+    private void PlayStumbleAnim(string anim)
+    {
+        Debug.Log("Stumble: " + anim);
+        // Deprecated
+        //m_animator.ForceStateNormalizedTime(0);
+        //PlayAnim(anim);
+
+        // Replace with:
+        m_animator.Play(anim, -1, 0);
+        stopAllState = true;
+
+        if (stumbleTimer < StumbleTolerance / 2)
+        {
+            // stumble 2 times in a row
+            StartCoroutine(PlayDeathAnim(AnimStumbleLow));
+            return;
+        }
+
+        stumbleTimer -= 0.6f * StumbleTolerance;
     }
 }
