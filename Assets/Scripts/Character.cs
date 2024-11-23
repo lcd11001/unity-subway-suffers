@@ -4,17 +4,19 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public enum SIDE { Left, Mid, Right }
+public enum SIDE { Left = -2, Mid = 0, Right = 2 }
 
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(Animator))]
 public class Character : MonoBehaviour
 {
     public float ForwardSpeed = 5.0f;
-    public float SwipeValue = 2.0f;
     public float SpeedDodge = 10.0f;
     public float JumpPower = 7f;
     public float RollDuration = 0.5f;
+
+    public SIDE Side = SIDE.Mid;
+    public SIDE LastSide = SIDE.Mid;
 
     [Space(10)]
     [Header("Animation Config")]
@@ -35,16 +37,17 @@ public class Character : MonoBehaviour
     public string AnimStumbleSideLeft = "stumbleSideLeft";
     public string AnimStumbleCornerRight = "stumbleCornerRight";
     public string AnimStumbleCornerLeft = "stumbleCornerLeft";
+    public string AnimStumbleLeft = "stumbleOffLeft";
+    public string AnimStumbleRight = "stumbleOffRight";
 
 
-    SIDE Side = SIDE.Mid;
+
+
     bool SwipeLeft = false;
     bool SwipeRight = false;
     bool SwipeUp = false;
     bool SwipeDown = false;
 
-    float newXPos = 0.0f;
-    float newYPos = 0.0f;
     float x = 0.0f;
     float y = 0.0f;
     bool isJumping = false;
@@ -81,7 +84,7 @@ public class Character : MonoBehaviour
         Jump();
         Roll();
 
-        Vector3 moveVector = new Vector3(x - transform.position.x, y, ForwardSpeed * Time.deltaTime);
+        Vector3 moveVector = new Vector3(x - transform.position.x, y * Time.deltaTime, ForwardSpeed * Time.deltaTime);
         m_controller.Move(moveVector);
     }
 
@@ -91,32 +94,45 @@ public class Character : MonoBehaviour
         {
             if (Side == SIDE.Mid)
             {
+                LastSide = Side;
                 Side = SIDE.Left;
-                newXPos = -SwipeValue;
+                m_animator.Play(AnimLeft);
             }
             else if (Side == SIDE.Right)
             {
+                LastSide = Side;
                 Side = SIDE.Mid;
-                newXPos = 0.0f;
+                m_animator.Play(AnimLeft);
             }
-            m_animator.Play(AnimLeft);
+            else
+            {
+                LastSide = Side;
+                m_animator.Play(AnimStumbleLeft);
+            }
+
         }
         else if (SwipeRight && !isRolling)
         {
             if (Side == SIDE.Mid)
             {
+                LastSide = Side;
                 Side = SIDE.Right;
-                newXPos = SwipeValue;
+                m_animator.Play(AnimRight);
             }
             else if (Side == SIDE.Left)
             {
+                LastSide = Side;
                 Side = SIDE.Mid;
-                newXPos = 0.0f;
+                m_animator.Play(AnimRight);
             }
-            m_animator.Play(AnimRight);
+            else
+            {
+                LastSide = Side;
+                m_animator.Play(AnimStumbleRight);
+            }
         }
 
-        x = Mathf.Lerp(x, newXPos, SpeedDodge * Time.deltaTime);
+        x = Mathf.Lerp(x, (int)Side, SpeedDodge * Time.deltaTime);
     }
 
     private void Jump()
@@ -131,25 +147,23 @@ public class Character : MonoBehaviour
             {
                 m_animator.Play(AnimLanding);
                 isJumping = false;
-                newYPos = 0.0f;
+                y = 0.0f;
             }
             if (SwipeUp)
             {
-                newYPos = JumpPower;
+                y = JumpPower;
                 m_animator.CrossFadeInFixedTime(AnimJump, 0.1f);
                 isJumping = true;
             }
         }
         else
         {
-            newYPos -= JumpPower * 2 * Time.deltaTime;
+            y -= JumpPower * 2 * Time.deltaTime;
             if (m_controller.velocity.y < -0.1f)
             {
                 m_animator.Play(AnimFalling);
             }
         }
-
-        y = newYPos * Time.deltaTime;
     }
 
     private void Roll()
@@ -222,11 +236,15 @@ public class Character : MonoBehaviour
         {
             if (hitX == HIT_X.Right)
             {
+                // swipe back to last side
+                Side = LastSide;
                 Debug.Log("Death: " + AnimStumbleSideLeft);
                 m_animator.Play(AnimStumbleSideLeft);
             }
             else if (hitX == HIT_X.Left)
             {
+                // swipe back to last side
+                Side = LastSide;
                 Debug.Log("Death: " + AnimStumbleSideRight);
                 m_animator.Play(AnimStumbleSideRight);
             }
